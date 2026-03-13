@@ -1,5 +1,34 @@
 package mlb
 
+// Get the full roster for a team, including player IDs and positions. This is used to get the player IDs for the next step of getting stats for each player.
+type RosterResponse struct {
+	Roster []RosterEntry `json:"roster"`
+}
+
+type RosterEntry struct {
+	Person       Person `json:"person"`
+	JerseyNumber string `json:"jerseyNumber"`
+	Position     struct {
+		Code string `json:"code"`
+		Name string `json:"name"`
+	} `json:"position"`
+}
+
+//Get the stats for a player, including their hitting and pitching stats. This is used to get the stats for each player on the roster.
+
+type SeasonStatsResponse struct {
+	Stats []StatsContainer `json:"stats"`
+}
+
+type StatsContainer struct {
+	Splits StatSplit `json:"splits"`
+}
+
+type StatSplit struct {
+	Stat   HittingStats `json:"stat"`
+	Player Person       `json:"player"`
+}
+
 type Person struct {
 	ID              int    `json:"id"`
 	FullName        string `json:"fullName"`

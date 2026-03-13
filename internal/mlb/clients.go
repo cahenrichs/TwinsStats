@@ -52,3 +52,27 @@ func fetchAndCache[T any](BaseURL string, cachePath string) (*T, error) {
 	}
 	return &result, nil
 }
+
+func GetRoster(teamID int) (*RosterResponse, error) {
+	url := fmt.Sprintf("%steams/%d/roster", BaseURL, teamID)
+	cachePath := fmt.Sprintf("cache/roster_%d.json", teamID)
+	return fetchAndCache[RosterResponse](url, cachePath)
+}
+
+func GetTeamStats(teamID int, season int) (*SeasonStatsResponse, error) {
+	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=hitting", BaseURL, teamID)
+	cache := filepath.Join("data", fmt.Sprintf("stats_hitting_%d_%d.json", teamID, season))
+	return fetchAndCache[SeasonStatsResponse](url, cache)
+}
+
+func GetPitchingStats(playerID int) (*SeasonStatsResponse, error) {
+	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=pitching", BaseURL, playerID)
+	cachePath := fmt.Sprintf("cache/pitching_stats_%d.json", playerID)
+	return fetchAndCache[SeasonStatsResponse](url, cachePath)
+}
+
+func GetPlayerSeasonStats(playerID int) (*SeasonStatsResponse, error) {
+	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear", BaseURL, playerID)
+	cachePath := fmt.Sprintf("cache/player_stats_%d.json", playerID)
+	return fetchAndCache[SeasonStatsResponse](url, cachePath)
+}
