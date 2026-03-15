@@ -60,7 +60,7 @@ func GetRoster(teamID int) (*RosterResponse, error) {
 }
 
 func GetTeamStats(teamID int, season int) (*SeasonStatsResponse, error) {
-	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=hitting", BaseURL, teamID)
+	url := fmt.Sprintf("%steams/%d/stats?season=%d&group=hitting&stats=season", BaseURL, teamID, season)
 	cache := filepath.Join("data", fmt.Sprintf("stats_hitting_%d_%d.json", teamID, season))
 	return fetchAndCache[SeasonStatsResponse](url, cache)
 }
@@ -74,5 +74,10 @@ func GetPitchingStats(playerID int) (*SeasonStatsResponse, error) {
 func GetPlayerSeasonStats(playerID int) (*SeasonStatsResponse, error) {
 	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear", BaseURL, playerID)
 	cachePath := fmt.Sprintf("cache/player_stats_%d.json", playerID)
+	return fetchAndCache[SeasonStatsResponse](url, cachePath)
+}
+func GetPlayerStatsbySeason(playerID int, season int) (*SeasonStatsResponse, error) {
+	url := fmt.Sprintf("%speople/%d/stats?stats=season&season=%d&group=hitting", BaseURL, playerID, season)
+	cachePath := fmt.Sprintf("cache/player_stats_%d_%d.json", playerID, season)
 	return fetchAndCache[SeasonStatsResponse](url, cachePath)
 }

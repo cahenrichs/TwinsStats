@@ -21,10 +21,11 @@ type SeasonStatsResponse struct {
 }
 
 type StatsContainer struct {
-	Splits StatSplit `json:"splits"`
+	Splits []StatSplit `json:"splits"`
 }
 
 type StatSplit struct {
+	Season string       `json:"season"`
 	Stat   HittingStats `json:"stat"`
 	Player Person       `json:"player"`
 }
@@ -38,16 +39,16 @@ type Person struct {
 }
 
 type HittingStats struct {
-	GamesPlayed    int     `json:"gamesPlayed"`
-	AtBats         int     `json:"atBats"`
-	Hits           int     `json:"hits"`
-	BattingAverage float64 `json:"battingAverage"`
-	HomeRuns       int     `json:"homeRuns"`
-	OBP            float64 `json:"OBP"`
-	SLG            float64 `json:"SLG"`
-	RBIs           int     `json:"RBIs"`
-	Runs           int     `json:"runs"`
-	SB             int     `json:"stolenBases"`
+	GamesPlayed    int    `json:"gamesPlayed"`
+	AtBats         int    `json:"atBats"`
+	Hits           int    `json:"hits"`
+	BattingAverage string `json:"avg"`
+	HomeRuns       int    `json:"homeRuns"`
+	OBP            string `json:"obp"`
+	SLG            string `json:"slg"`
+	RBIs           int    `json:"rbi"`
+	Runs           int    `json:"runs"`
+	SB             int    `json:"stolenBases"`
 }
 
 type PitchingStats struct {
