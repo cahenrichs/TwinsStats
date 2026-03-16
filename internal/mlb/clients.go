@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const BaseURL = "https://statsapi.mlb.com/api/v1/"
@@ -51,6 +52,23 @@ func fetchAndCache[T any](BaseURL string, cachePath string) (*T, error) {
 		return nil, fmt.Errorf("failed to write cache: %w", err)
 	}
 	return &result, nil
+}
+
+func FindPlayerByName(teamID int, playerName string) (*Person, error) {
+	if playerName == "" {
+		return nil, fmt.Errorf("player name cannot be empty")
+	}
+	roster, err := GetRoster(teamID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get roster: %w", err)
+	}
+	for _, entry := range roster.Roster {
+		if strings.Contains(strings.ToLower(entry.Person.FullName), strings.ToLower(playerName)) {
+			p := entry.Person
+			return &p, nil
+		}
+	}
+	return nil, fmt.Errorf("player not found: %s", playerName)
 }
 
 func GetRoster(teamID int) (*RosterResponse, error) {

@@ -21,4 +21,28 @@ func main() {
 				stat.Season, stat.Stat.GamesPlayed, stat.Stat.AtBats, stat.Stat.Hits, stat.Stat.BattingAverage)
 		}
 	}
+
+	//get Buxton's stats
+	fmt.Println("\nFetching Buxton's Stats...")
+	searchName := "Buxton"
+	player, err := mlb.FindPlayerByName(142, searchName)
+	if err != nil {
+		fmt.Printf("Error finding player: %v\n", err)
+		return
+	}
+	fmt.Printf("Found player: %s (ID: %d)\n", player.FullName, player.ID)
+
+	// Get Buxton's season stats for 2025
+	playerStats, err := mlb.GetPlayerStatsbySeason(player.ID, 2025)
+	if err != nil {
+		fmt.Printf("Error fetching player stats: %v\n", err)
+		return
+	}
+	if len(playerStats.Stats) > 0 && len(playerStats.Stats[0].Splits) > 0 {
+		stat := playerStats.Stats[0].Splits[0].Stat
+		fmt.Printf("Season: %s, Games Played: %d, At Bats: %d, Hits: %d, Batting Average: %s, Home Runs: %d\n",
+			playerStats.Stats[0].Splits[0].Season, stat.GamesPlayed, stat.AtBats, stat.Hits, stat.BattingAverage, stat.HomeRuns)
+	} else {
+		fmt.Println("No stats found for Buxton in 2025.")
+	}
 }
