@@ -10,7 +10,9 @@ func main() {
 
 	fmt.Println("Fetching Minnesota Twins Stats...")
 
-	stats, err := mlb.GetTeamStats(142, 2025)
+	api := mlb.Client{}
+
+	stats, err := api.GetTeamStats(142, 2025)
 	if err != nil {
 		fmt.Printf("Error fetching team stats: %v\n", err)
 		return
@@ -25,7 +27,7 @@ func main() {
 	//get Buxton's stats
 	fmt.Println("\nFetching Buxton's Stats...")
 	searchName := "Buxton"
-	player, err := mlb.FindPlayerByName(142, searchName)
+	player, err := api.FindPlayerByName(142, searchName)
 	if err != nil {
 		fmt.Printf("Error finding player: %v\n", err)
 		return
@@ -33,7 +35,7 @@ func main() {
 	fmt.Printf("Found player: %s (ID: %d)\n", player.FullName, player.ID)
 
 	// Get Buxton's season stats for 2025
-	playerStats, err := mlb.GetPlayerStatsbySeason(player.ID, 2025)
+	playerStats, err := api.GetPlayerStatsbySeason(player.ID, 2025)
 	if err != nil {
 		fmt.Printf("Error fetching player stats: %v\n", err)
 		return
