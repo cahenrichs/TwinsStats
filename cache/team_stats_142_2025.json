@@ -1,0 +1,53 @@
+{
+  "stats": [
+    {
+      "splits": [
+        {
+          "season": "2025",
+          "stat": {
+            "gamesPlayed": 162,
+            "groundOuts": 1303,
+            "airOuts": 1505,
+            "runs": 678,
+            "doubles": 249,
+            "triples": 20,
+            "homeRuns": 191,
+            "strikeOuts": 1372,
+            "baseOnBalls": 495,
+            "intentionalWalks": 10,
+            "hits": 1295,
+            "hitByPitch": 88,
+            "avg": ".238",
+            "atBats": 5432,
+            "obp": ".310",
+            "slg": ".397",
+            "ops": ".707",
+            "caughtStealing": 34,
+            "stolenBases": 114,
+            "stolenBasePercentage": ".770",
+            "caughtStealingPercentage": ".230",
+            "groundIntoDoublePlay": 105,
+            "numberOfPitches": 23634,
+            "plateAppearances": 6059,
+            "totalBases": 2157,
+            "rbi": 643,
+            "leftOnBase": 1089,
+            "sacBunts": 9,
+            "sacFlies": 34,
+            "babip": ".283",
+            "groundOutsToAirouts": "0.87",
+            "catchersInterference": 1,
+            "atBatsPerHomeRun": "28.44"
+          },
+          "player": {
+            "id": 0,
+            "fullName": "",
+            "firstName": "",
+            "lastName": "",
+            "primaryPosition": ""
+          }
+        }
+      ]
+    }
+  ]
+}

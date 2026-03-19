@@ -1,5 +1,10 @@
 package mlb
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // Get the full roster for a team, including player IDs and positions. This is used to get the player IDs for the next step of getting stats for each player.
 type RosterResponse struct {
 	Roster []RosterEntry `json:"roster"`
@@ -25,9 +30,9 @@ type StatsContainer struct {
 }
 
 type StatSplit struct {
-	Season string       `json:"season"`
-	Stat   HittingStats `json:"stat"`
-	Player Person       `json:"player"`
+	Season string          `json:"season"`
+	Stat   json.RawMessage `json:"stat"`
+	Player Person          `json:"player"`
 }
 
 type Person struct {
@@ -60,4 +65,22 @@ type PitchingStats struct {
 	WHIP           float64 `json:"WHIP"`
 	Strikeouts     int     `json:"strikeouts"`
 	SOP9           int     `json:"strikeoutsPer9Inn"`
+}
+
+func (s *StatSplit) GetHittingStats() (*HittingStats, error) {
+	var h HittingStats
+	err := json.Unmarshal(s.Stat, &h)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal hitting stats: %w", err)
+	}
+	return &h, nil
+}
+
+func (s *StatSplit) GetPitchingStats() (*PitchingStats, error) {
+	var p PitchingStats
+	err := json.Unmarshal(s.Stat, &p)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal pitching stats: %w", err)
+	}
+	return &p, nil
 }

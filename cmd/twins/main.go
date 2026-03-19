@@ -10,7 +10,7 @@ func main() {
 
 	fmt.Println("Fetching Minnesota Twins Stats...")
 
-	api := mlb.Client{}
+	api := mlb.NewClient()
 
 	stats, err := api.GetTeamStats(142, 2025)
 	if err != nil {
@@ -19,8 +19,13 @@ func main() {
 	}
 	for _, container := range stats.Stats {
 		for _, stat := range container.Splits {
+			hStats, err := stat.GetHittingStats()
+			if err != nil {
+				fmt.Printf("Error parsing hitting stats: %v\n", err)
+				continue
+			}
 			fmt.Printf("Season: %s, Games Played: %d, At Bats: %d, Hits: %d, Batting Average: %s\n",
-				stat.Season, stat.Stat.GamesPlayed, stat.Stat.AtBats, stat.Stat.Hits, stat.Stat.BattingAverage)
+				stat.Season, hStats.GamesPlayed, hStats.AtBats, hStats.Hits, hStats.BattingAverage)
 		}
 	}
 
@@ -32,18 +37,23 @@ func main() {
 		fmt.Printf("Error finding player: %v\n", err)
 		return
 	}
-	fmt.Printf("Found player: %s (ID: %d)\n", player.FullName, player.ID)
+	fmt.Printf("Found player: %s (ID: %d)\n", player.Person.FullName, player.Person.ID)
 
 	// Get Buxton's season stats for 2025
-	playerStats, err := api.GetPlayerStatsbySeason(player.ID, 2025)
+	playerStats, err := api.GetPlayerStats(player.Person.ID, 2025, "hitting")
 	if err != nil {
 		fmt.Printf("Error fetching player stats: %v\n", err)
 		return
 	}
 	if len(playerStats.Stats) > 0 && len(playerStats.Stats[0].Splits) > 0 {
-		stat := playerStats.Stats[0].Splits[0].Stat
+		split := playerStats.Stats[0].Splits[0]
+		hStat, err := split.GetHittingStats()
+		if err != nil {
+			fmt.Printf("Error parsing hitting stats: %v\n", err)
+			return
+		}
 		fmt.Printf("Season: %s, Games Played: %d, At Bats: %d, Hits: %d, Batting Average: %s, Home Runs: %d\n",
-			playerStats.Stats[0].Splits[0].Season, stat.GamesPlayed, stat.AtBats, stat.Hits, stat.BattingAverage, stat.HomeRuns)
+			playerStats.Stats[0].Splits[0].Season, hStat.GamesPlayed, hStat.AtBats, hStat.Hits, hStat.BattingAverage, hStat.HomeRuns)
 	} else {
 		fmt.Println("No stats found for Buxton in 2025.")
 	}
