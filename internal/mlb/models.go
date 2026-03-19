@@ -40,7 +40,9 @@ type Person struct {
 	FullName        string `json:"fullName"`
 	FirstName       string `json:"firstName"`
 	LastName        string `json:"lastName"`
-	PrimaryPosition string `json:"primaryPosition"`
+	PrimaryPosition struct {
+		Name string `json:"name"`
+	} `json:"primaryPosition"`
 }
 
 type HittingStats struct {

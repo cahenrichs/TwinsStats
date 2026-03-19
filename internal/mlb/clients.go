@@ -85,7 +85,7 @@ func (c *Client) FindPlayerByName(teamID int, playerName string) (*RosterEntry, 
 }
 
 func (c *Client) GetRoster(teamID int) (*RosterResponse, error) {
-	url := fmt.Sprintf("%steams/%d/roster", c.baseURL, teamID)
+	url := fmt.Sprintf("%steams/%d/roster?hydrate=person(firstName,lastName,primaryPosition)", c.baseURL, teamID)
 	fileName := fmt.Sprintf("roster_%d.json", teamID)
 	return fetchAndCache[RosterResponse](c, url, fileName)
 }
@@ -97,7 +97,7 @@ func (c *Client) GetTeamStats(teamID int, season int) (*SeasonStatsResponse, err
 }
 
 func (c *Client) GetPitchingStats(playerID int) (*SeasonStatsResponse, error) {
-	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=pitching", c.baseURL, playerID)
+	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=pitching)", c.baseURL, playerID)
 	fileName := fmt.Sprintf("pitching_stats_%d.json", playerID)
 	return fetchAndCache[SeasonStatsResponse](c, url, fileName)
 }
@@ -115,7 +115,7 @@ func (c *Client) GetPlayerSeasonStats(playerID int) (*SeasonStatsResponse, error
 } */
 
 func (c *Client) GetPlayerStats(playerID int, season int, group string) (*SeasonStatsResponse, error) {
-	url := fmt.Sprintf("%speople/%d/stats?stats=season&season=%d&group=%s", c.baseURL, playerID, season, group)
+	url := fmt.Sprintf("%speople/%d/stats?stats=season&season=%d&group=%s&hydrate=person(firstName,lastName,primaryPosition)", c.baseURL, playerID, season, group)
 	fileName := fmt.Sprintf("player_stats_%d_%d_%s.json", playerID, season, group)
 	return fetchAndCache[SeasonStatsResponse](c, url, fileName)
 }

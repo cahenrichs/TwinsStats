@@ -43,9 +43,11 @@
           "player": {
             "id": 621439,
             "fullName": "Byron Buxton",
-            "firstName": "",
-            "lastName": "",
-            "primaryPosition": ""
+            "firstName": "Byron",
+            "lastName": "Buxton",
+            "primaryPosition": {
+              "name": "Outfielder"
+            }
           }
         }
       ]
