@@ -26,7 +26,7 @@ func NewClient() *Client {
 func fetchAndCache[T any](c *Client, url string, fileName string) (*T, error) {
 	fullCachePath := filepath.Join(c.cache, fileName)
 
-	if _, err := os.Stat(fullCachePath); err == nil {
+	/*if _, err := os.Stat(fullCachePath); err == nil {
 		// Cache exists, return cached data
 		data, err := os.ReadFile(fullCachePath)
 		if err != nil {
@@ -37,6 +37,12 @@ func fetchAndCache[T any](c *Client, url string, fileName string) (*T, error) {
 			return nil, fmt.Errorf("failed to unmarshal cache: %w", err)
 		}
 		return &result, nil
+	} */
+	if data, err := os.ReadFile(fullCachePath); err == nil {
+		var result T
+		if err := json.Unmarshal(data, &result); err == nil {
+			return &result, nil
+		}
 	}
 	//If not stored get it from the API
 	resp, err := c.http.Get(url)
@@ -54,8 +60,17 @@ func fetchAndCache[T any](c *Client, url string, fileName string) (*T, error) {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	// Cache the result for future use and make sure dir exists
-	if err := os.MkdirAll(filepath.Dir(fullCachePath), 0755); err != nil {
+	// Async or background caching could be done here, but for simplicity:
+	_ = os.MkdirAll(filepath.Dir(fullCachePath), 0755)
+	if data, err := json.MarshalIndent(result, "", "  "); err == nil {
+		_ = os.WriteFile(fullCachePath, data, 0644)
+	}
+	return &result, nil
+
+}
+
+// Cache the result for future use and make sure dir exists
+/*if err := os.MkdirAll(filepath.Dir(fullCachePath), 0755); err != nil {
 		return nil, fmt.Errorf("failed to create cache directory: %w", err)
 	}
 	data, err := json.MarshalIndent(result, "", "  ")
@@ -66,7 +81,7 @@ func fetchAndCache[T any](c *Client, url string, fileName string) (*T, error) {
 		return nil, fmt.Errorf("failed to write cache: %w", err)
 	}
 	return &result, nil
-}
+}*/
 
 func (c *Client) FindPlayerByName(teamID int, playerName string) (*RosterEntry, error) {
 	if playerName == "" {
@@ -97,7 +112,7 @@ func (c *Client) GetTeamStats(teamID int, season int) (*SeasonStatsResponse, err
 }
 
 func (c *Client) GetPitchingStats(playerID int) (*SeasonStatsResponse, error) {
-	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=pitching)", c.baseURL, playerID)
+	url := fmt.Sprintf("%speople/%d/stats?stats=yearByYear&group=pitching", c.baseURL, playerID)
 	fileName := fmt.Sprintf("pitching_stats_%d.json", playerID)
 	return fetchAndCache[SeasonStatsResponse](c, url, fileName)
 }
