@@ -86,3 +86,15 @@ func (s *StatSplit) GetPitchingStats() (*PitchingStats, error) {
 	}
 	return &p, nil
 }
+
+type TeamsResponse struct {
+	Teams []Team `json:"teams"`
+}
+
+type Team struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Venue struct {
+		Name string `json:"name"`
+	} `json:"venue"`
+}

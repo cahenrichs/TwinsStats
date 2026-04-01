@@ -134,3 +134,23 @@ func (c *Client) GetPlayerStats(playerID int, season int, group string) (*Season
 	fileName := fmt.Sprintf("player_stats_%d_%d_%s.json", playerID, season, group)
 	return fetchAndCache[SeasonStatsResponse](c, url, fileName)
 }
+
+func (c *Client) GetAllTeams() (*TeamsResponse, error) {
+	url := fmt.Sprintf("%steams?sportID=1", c.baseURL)
+	return fetchAndCache[TeamsResponse](c, url, "all_teams.json")
+}
+
+func (c *Client) SearchTeams(query string) ([]Team, error) {
+	teams, err := c.GetAllTeams()
+	if err != nil {
+		return nil, err
+	}
+	var matches []Team
+	q := strings.ToLower(query)
+	for _, t := range teams.Teams {
+		if strings.Contains(strings.ToLower(t.Name), q) {
+			matches = append(matches, t)
+		}
+	}
+	return matches, nil
+}
