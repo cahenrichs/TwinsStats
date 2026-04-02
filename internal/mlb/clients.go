@@ -105,9 +105,9 @@ func (c *Client) GetRoster(teamID int) (*RosterResponse, error) {
 	return fetchAndCache[RosterResponse](c, url, fileName)
 }
 
-func (c *Client) GetTeamStats(teamID int, season int) (*SeasonStatsResponse, error) {
-	url := fmt.Sprintf("%steams/%d/stats?season=%d&group=hitting&stats=season", c.baseURL, teamID, season)
-	fileName := fmt.Sprintf("team_stats_%d_%d.json", teamID, season)
+func (c *Client) GetTeamStats(teamID int, season int, group string) (*SeasonStatsResponse, error) {
+	url := fmt.Sprintf("%steams/%d/stats?season=%d&group=%s&stats=season", c.baseURL, teamID, season, group)
+	fileName := fmt.Sprintf("team_%s_%d_%d.json", group, teamID, season)
 	return fetchAndCache[SeasonStatsResponse](c, url, fileName)
 }
 
@@ -154,3 +154,13 @@ func (c *Client) SearchTeams(query string) ([]Team, error) {
 	}
 	return matches, nil
 }
+
+/*
+func (c *Client) FindPlayerAllTeams(playername string) ([]RosterEntryWithTeam, error) {
+	teams, err := c.GetAllTeams()
+	if err != nil {
+		return nil, err
+	}
+	var matches []RosterEntryWithTeam
+
+}*/

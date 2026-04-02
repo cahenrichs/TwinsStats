@@ -1,26 +1,36 @@
 package models
 
+import "time"
+
 type Team struct {
-	Id       int    `gorm:"primarykey"`
-	Name     string `gorm:"index"`
-	Nickname string `gorm:"index"`
-	Abbr     string `gorm:"index"`
+	Id        uint     `gorm:"primarykey"`
+	MLBID     int      `gorm:"uniqueindex"`
+	Name      string   `gorm:"index"`
+	Nickname  string   `gorm:"index"`
+	Abbr      string   `gorm:"index"`
+	Players   []Player `gorm:"foreignKey:CurrentTeamID"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Player struct {
 	Id            int    `gorm:"primarykey"`
+	MLBID         int    `gorm:"uniqueindex"`
 	FullName      string `gorm:"index"`
 	Position      string
-	CurrentTeamId int  `gorm:"index"`
-	Team          Team `gorm:"foreignKey:CurrentTeamId"`
-	HittingStats  []HittingStats
-	PitchingStats []PitchingStats
+	PositionCode  string
+	CurrentTeamId uint            `gorm:"index"`
+	Team          Team            `gorm:"foreignKey:CurrentTeamId"`
+	HittingStats  []HittingStats  `gorm:"foreignKey:PlayerID"`
+	PitchingStats []PitchingStats `gorm:"foreignKey:PlayerID"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 type HittingStats struct {
-	PlayerId    int  `gorm:"primarykey"`
-	Season      int  `gorm:"primarykey"`
-	IsCareer    bool `gorm:"primarykey"`
+	ID          uint `gorm:"primaryKey"`
+	PlayerId    uint `gorm:"index"`
+	Season      uint `gorm:"index"`
 	GamesPlayed int
 	AtBats      int
 	Hits        int
@@ -30,24 +40,38 @@ type HittingStats struct {
 	RBI         int
 	Runs        int
 	SB          int
+	Walks       int
+	Strikeouts  int
 	BA          float64
 	OBP         float64
 	SLG         float64
 	OPS         float64
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type PitchingStats struct {
-	PlayerId       int  `gorm:"primarykey"`
-	Season         int  `gorm:"primarykey"`
-	IsCareer       bool `gorm:"primarykey"`
-	GamesPlayed    int
-	GamesStarted   int
-	InningsPitched float64
-	Wins           int
-	Losses         int
-	Saves          int
-	ERA            float64
-	WHIP           float64
-	Strikeouts     int
-	SOP9           int
+	ID              uint `gorm:"primaryKey"`
+	PlayerId        int  `gorm:"index"`
+	Season          int  `gorm:"index"`
+	GamesPlayed     int
+	GamesStarted    int
+	InningsPitched  float64
+	HitsAllowed     int
+	WalksAllwed     int
+	RunsAllowed     int
+	HomeRunsAllowed int
+	Wins            int
+	Losses          int
+	Saves           int
+	ERA             float64
+	WHIP            float64
+	Strikeouts      int
+	SOP9            int
+	CreatedAt       time.Time
+	UpdtedAt        time.Time
+}
+
+func (p *Player) IsPitcher() bool {
+	return p.PositionCode == "1"
 }
