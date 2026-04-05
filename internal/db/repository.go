@@ -50,3 +50,39 @@ func (r *Repository) GetPlayerStats(playerID int, season int, statType string) (
 	err := r.db.Where("player_id = ? AND season = ?", playerID, season).First(&stats).Error
 	return stats, err
 }
+
+func (r *Repository) SaveHittingStats(stats *models.HittingStats) error {
+	return r.db.Save(stats).Error
+}
+
+func (r *Repository) SavePitchingStats(stats *models.PitchingStats) error {
+	return r.db.Save(stats).Error
+}
+
+// Team
+func (r *Repository) FindTeamByName(name string) (*models.Team, error) {
+	var team models.Team
+	name = strings.ToLower(name)
+	err := r.db.Where("LOWER(name LIKE ? OR LOWER(nickname) LIKE ? OR LOWER(abbr) LIKE ?", "%"+name+"%", "%"+name+"%", "%"+name+"%").First(&team).Error
+	if err != nil {
+		return nil, fmt.Errorf("team not found: %w", err)
+	}
+	return &team, nil
+}
+
+func (r *Repository) GetTeamByMLBID(mlbid int) (*models.Team, error) {
+	var team models.Team
+	err := r.db.Where("milb_id = ?", mlbid).First(&team).Error
+	if err != nil {
+		return nil, fmt.Errorf("team not found by mlbid: %w", err)
+	}
+	return &team, nil
+}
+
+func (r *Repository) SaveTeam(team *models.Team) error {
+	return r.db.Save(team).Error
+}
+
+func (r *Repository) SaveRoster(teamID uint, players []models.Player) error {
+	return r.db.Where("current_team_id = ?", teamID).Delete(&models.Player{}).Error
+}
