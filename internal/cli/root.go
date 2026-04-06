@@ -28,6 +28,9 @@ func Execute() {
 func init() {
 	rootCmd.PersistentFlags().StringVar(&dbPath, "db", "./data/mlb.db", "path to SQLite database")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+
+	rootCmd.AddCommand(playerCmd)
+	rootCmd.AddCommand(teamCmd)
 }
 
 func initDB() (*db.Repository, error) {
