@@ -155,12 +155,26 @@ func (c *Client) SearchTeams(query string) ([]Team, error) {
 	return matches, nil
 }
 
-/*
-func (c *Client) FindPlayerAllTeams(playername string) ([]RosterEntryWithTeam, error) {
+func (c *Client) FindPlayerAllTeams(playerName string) ([]RosterEntry, error) {
 	teams, err := c.GetAllTeams()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get teams: %w", err)
 	}
-	var matches []RosterEntryWithTeam
-
-}*/
+	var matches []RosterEntry
+	name := strings.ToLower(playerName)
+	for _, team := range teams.Teams {
+		roster, err := c.GetRoster(team.ID)
+		if err != nil {
+			continue
+		}
+		for _, entry := range roster.Roster {
+			if strings.Contains(strings.ToLower(entry.Person.FullName), name) {
+				matches = append(matches, entry)
+			}
+		}
+	}
+	if len(matches) == 0 {
+		return nil, fmt.Errorf("player not found: %s", playerName)
+	}
+	return matches, nil
+}
