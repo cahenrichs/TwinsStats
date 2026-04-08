@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/cahenrichs/TwinsStats/internal/models"
+	"github.com/cahenrichs/mlbstats/internal/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )

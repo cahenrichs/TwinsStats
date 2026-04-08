@@ -1,21 +1,38 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/cahenrichs/TwinsStats/internal/mlb"
+	"github.com/cahenrichs/mlbstats/internal/cli"
 )
 
 func main() {
+	cli.Execute()
+	/*if len(os.Args) < 2 {
+		fmt.Println("Usage: mlb <team-name>")
+		fmt.Println("Example: mlb Dodgers")
+		os.Exit(1)
+	}
 
-	fmt.Println("Fetching Minnesota Twins Stats...")
-
+	teamName := os.Args[1]
 	api := mlb.NewClient()
 
-	stats, err := api.GetTeamStats(142, 2025)
+	teams, err := api.SearchTeams(teamName)
+	if err != nil {
+		fmt.Printf("Error searching teams: %v\n", err)
+		os.Exit(1)
+	}
+
+	if len(teams) == 0 {
+		fmt.Printf("No team found matching: %s\n", teamName)
+		os.Exit(1)
+	}
+
+	team := teams[0]
+	fmt.Printf("Fetching %s Stats...\n\n", team.Name)
+
+	stats, err := api.GetTeamStats(team.ID, 2025, "hitting")
 	if err != nil {
 		fmt.Printf("Error fetching team stats: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	for _, container := range stats.Stats {
 		for _, stat := range container.Splits {
@@ -27,34 +44,5 @@ func main() {
 			fmt.Printf("Season: %s, Games Played: %d, At Bats: %d, Hits: %d, Batting Average: %s\n",
 				stat.Season, hStats.GamesPlayed, hStats.AtBats, hStats.Hits, hStats.BattingAverage)
 		}
-	}
-
-	//get Buxton's stats
-	fmt.Println("\nFetching Buxton's Stats...")
-	searchName := "Buxton"
-	player, err := api.FindPlayerByName(142, searchName)
-	if err != nil {
-		fmt.Printf("Error finding player: %v\n", err)
-		return
-	}
-	fmt.Printf("Found player: %s (ID: %d)\n", player.Person.FullName, player.Person.ID)
-
-	// Get Buxton's season stats for 2025
-	playerStats, err := api.GetPlayerStats(player.Person.ID, 2025, "hitting")
-	if err != nil {
-		fmt.Printf("Error fetching player stats: %v\n", err)
-		return
-	}
-	if len(playerStats.Stats) > 0 && len(playerStats.Stats[0].Splits) > 0 {
-		split := playerStats.Stats[0].Splits[0]
-		hStat, err := split.GetHittingStats()
-		if err != nil {
-			fmt.Printf("Error parsing hitting stats: %v\n", err)
-			return
-		}
-		fmt.Printf("Season: %s, Games Played: %d, At Bats: %d, Hits: %d, Batting Average: %s, Home Runs: %d\n",
-			playerStats.Stats[0].Splits[0].Season, hStat.GamesPlayed, hStat.AtBats, hStat.Hits, hStat.BattingAverage, hStat.HomeRuns)
-	} else {
-		fmt.Println("No stats found for Buxton in 2025.")
-	}
+	} */
 }

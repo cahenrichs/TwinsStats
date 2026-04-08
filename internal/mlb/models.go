@@ -59,14 +59,20 @@ type HittingStats struct {
 }
 
 type PitchingStats struct {
-	GamesPlayed    int     `json:"gamesPlayed"`
-	InningsPitched float64 `json:"inningsPitched"`
-	Wins           int     `json:"wins"`
-	Losses         int     `json:"losses"`
-	ERA            float64 `json:"ERA"`
-	WHIP           float64 `json:"WHIP"`
-	Strikeouts     int     `json:"strikeouts"`
-	SOP9           int     `json:"strikeoutsPer9Inn"`
+	GamesPlayed    int    `json:"gamesPlayed"`
+	GamesStarted   int    `json:"gamesStarted"`
+	InningsPitched string `json:"inningsPitched"`
+	Hits           int    `json:"hits"`
+	Runs           int    `json:"runs"`
+	HomeRuns       int    `json:"homeRuns"`
+	Wins           int    `json:"wins"`
+	Losses         int    `json:"losses"`
+	Saves          int    `json:"saves"`
+	ERA            string `json:"era"`
+	WHIP           string `json:"whip"`
+	Strikeouts     int    `json:"strikeOuts"`
+	SOP9           string `json:"strikeoutsPer9Inn"`
+	Walks          int    `json:"baseOnBalls"`
 }
 
 func (s *StatSplit) GetHittingStats() (*HittingStats, error) {

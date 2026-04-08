@@ -1,4 +1,4 @@
-module github.com/cahenrichs/TwinsStats
+module github.com/cahenrichs/mlbstats
 
 go 1.24.4
 

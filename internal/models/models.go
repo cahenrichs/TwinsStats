@@ -3,26 +3,24 @@ package models
 import "time"
 
 type Team struct {
-	Id        uint     `gorm:"primarykey"`
-	MLBID     int      `gorm:"uniqueindex"`
-	Name      string   `gorm:"index"`
-	Nickname  string   `gorm:"index"`
-	Abbr      string   `gorm:"index"`
-	Players   []Player `gorm:"foreignKey:CurrentTeamID"`
+	Id        uint   `gorm:"primarykey"`
+	MLBID     int    `gorm:"uniqueindex"`
+	Name      string `gorm:"index"`
+	Nickname  string `gorm:"index"`
+	Abbr      string `gorm:"index"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type Player struct {
-	Id            int    `gorm:"primarykey"`
+	Id            uint   `gorm:"primarykey"`
 	MLBID         int    `gorm:"uniqueindex"`
 	FullName      string `gorm:"index"`
 	Position      string
 	PositionCode  string
 	CurrentTeamId uint            `gorm:"index"`
-	Team          Team            `gorm:"foreignKey:CurrentTeamId"`
-	HittingStats  []HittingStats  `gorm:"foreignKey:PlayerID"`
-	PitchingStats []PitchingStats `gorm:"foreignKey:PlayerID"`
+	HittingStats  []HittingStats  `gorm:"foreignKey:PlayerId"`
+	PitchingStats []PitchingStats `gorm:"foreignKey:PlayerId"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -30,7 +28,7 @@ type Player struct {
 type HittingStats struct {
 	ID          uint `gorm:"primaryKey"`
 	PlayerId    uint `gorm:"index"`
-	Season      uint `gorm:"index"`
+	Season      int  `gorm:"index"`
 	GamesPlayed int
 	AtBats      int
 	Hits        int
@@ -52,13 +50,13 @@ type HittingStats struct {
 
 type PitchingStats struct {
 	ID              uint `gorm:"primaryKey"`
-	PlayerId        int  `gorm:"index"`
+	PlayerId        uint `gorm:"index"`
 	Season          int  `gorm:"index"`
 	GamesPlayed     int
 	GamesStarted    int
 	InningsPitched  float64
 	HitsAllowed     int
-	WalksAllwed     int
+	WalksAllowed    int
 	RunsAllowed     int
 	HomeRunsAllowed int
 	Wins            int
@@ -67,9 +65,9 @@ type PitchingStats struct {
 	ERA             float64
 	WHIP            float64
 	Strikeouts      int
-	SOP9            int
+	SOP9            float64
 	CreatedAt       time.Time
-	UpdtedAt        time.Time
+	UpdatedAt       time.Time
 }
 
 func (p *Player) IsPitcher() bool {

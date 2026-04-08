@@ -51,8 +51,8 @@ func TestPitchingStats(t *testing.T) {
 	}{
 		{
 			name:    "valid stats",
-			input:   `{"wins": 5, "losses": 3, "era": 3.50, "strikeouts": 80}`,
-			want:    &PitchingStats{Wins: 5, Losses: 3, ERA: 3.50, Strikeouts: 80},
+			input:   `{"wins": 5, "losses": 3, "era": "3.50", "strikeOuts": 80}`,
+			want:    &PitchingStats{Wins: 5, Losses: 3, ERA: "3.50", Strikeouts: 80},
 			wantErr: false,
 		},
 		{

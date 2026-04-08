@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/cahenrichs/TwinsStats/internal/mlb"
-	"github.com/cahenrichs/TwinsStats/internal/models"
+	"github.com/cahenrichs/mlbstats/internal/mlb"
+	"github.com/cahenrichs/mlbstats/internal/models"
 	"github.com/spf13/cobra"
 )
 
@@ -71,7 +71,7 @@ func runTeamStats(cmd *cobra.Command, args []string) error {
 
 	hitting, err := api.GetTeamStats(team.MLBID, teamYear, "hitting")
 	if err != nil {
-		return fmt.Errorf("failed to get team hitting stats: %w, err")
+		return fmt.Errorf("failed to get team hitting stats: %w", err)
 	}
 	printTeamHittingStats(hitting, teamYear)
 
@@ -119,17 +119,23 @@ func printTeamPitchingStats(stats *mlb.SeasonStatsResponse, year int) {
 			}
 			p, err := split.GetPitchingStats()
 			if err != nil {
-				fmt.Errorf("Error parsing pitching stats: %w\n", err)
+				fmt.Printf("Error parsing pitching stats: %v\n", err)
 				return
 			}
 			fmt.Printf("Team Pitching (%s)\n", split.Season)
 			fmt.Printf("  Games:   %d\n", p.GamesPlayed)
-			fmt.Printf("  IP:      %.1f\n", p.InningsPitched)
+			fmt.Printf("  GS:      %d\n", p.GamesStarted)
+			fmt.Printf("  IP:      %s\n", p.InningsPitched)
 			fmt.Printf("  W-L:     %d-%d\n", p.Wins, p.Losses)
-			fmt.Printf("  ERA:     %.2f\n", p.ERA)
-			fmt.Printf("  WHIP:    %.2f\n", p.WHIP)
+			fmt.Printf("  ERA:     %s\n", p.ERA)
+			fmt.Printf("  WHIP:    %s\n", p.WHIP)
 			fmt.Printf("  K:       %d\n", p.Strikeouts)
-			fmt.Printf("  K/9:     %.1f\n", p.SOP9)
+			fmt.Printf("  BB:      %d\n", p.Walks)
+			fmt.Printf("  H:       %d\n", p.Hits)
+			fmt.Printf("  R:       %d\n", p.Runs)
+			fmt.Printf("  HR:      %d\n", p.HomeRuns)
+			fmt.Printf("  SV:      %d\n", p.Saves)
+			fmt.Printf("  K/9:     %s\n", p.SOP9)
 			return
 		}
 	}

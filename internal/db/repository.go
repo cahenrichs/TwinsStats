@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cahenrichs/TwinsStats/internal/models"
+	"github.com/cahenrichs/mlbstats/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -31,7 +31,7 @@ func (r *Repository) GetPlayerByMLBID(mlbid int) (*models.Player, error) {
 	var player models.Player
 	err := r.db.Where("mlb.id = ?", mlbid).First(&player).Error
 	if err != nil {
-		return nil, fmt.Errorf("player milbid not found", err)
+		return nil, fmt.Errorf("player milbid not found: %w", err)
 	}
 	return &player, nil
 }
@@ -63,7 +63,7 @@ func (r *Repository) SavePitchingStats(stats *models.PitchingStats) error {
 func (r *Repository) FindTeamByName(name string) (*models.Team, error) {
 	var team models.Team
 	name = strings.ToLower(name)
-	err := r.db.Where("LOWER(name LIKE ? OR LOWER(nickname) LIKE ? OR LOWER(abbr) LIKE ?", "%"+name+"%", "%"+name+"%", "%"+name+"%").First(&team).Error
+	err := r.db.Where("(LOWER(name) LIKE ? OR LOWER(nickname) LIKE ? OR LOWER(abbr) LIKE ?)", "%"+name+"%", "%"+name+"%", "%"+name+"%").First(&team).Error
 	if err != nil {
 		return nil, fmt.Errorf("team not found: %w", err)
 	}

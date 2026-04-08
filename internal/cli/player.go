@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/cahenrichs/TwinsStats/internal/mlb"
-	"github.com/cahenrichs/TwinsStats/internal/models"
+	"github.com/cahenrichs/mlbstats/internal/mlb"
+	"github.com/cahenrichs/mlbstats/internal/models"
 	"github.com/spf13/cobra"
 )
 
@@ -60,7 +60,7 @@ func runPlayerCmd(cmd *cobra.Command, args []string) error {
 			fmt.Printf("Saved player to DB: %s\n", player.FullName)
 		}
 	}
-	stats, err := repo.GetPlayerStats(player.Id, playerYear, player.Position)
+	stats, err := repo.GetPlayerStats(int(player.Id), playerYear, player.Position)
 	if err != nil {
 		if verbose {
 			fmt.Println("Stats not inDB, fetching from MLB")
@@ -100,12 +100,17 @@ func printPitchingStats(stats *mlb.SeasonStatsResponse, year int) {
 			}
 			fmt.Printf("Pitching Stats (%s)\n", split.Season)
 			fmt.Printf("  Games:   %d\n", p.GamesPlayed)
-			fmt.Printf("  IP:      %.1f\n", p.InningsPitched)
+			fmt.Printf("  IP:      %s\n", p.InningsPitched)
 			fmt.Printf("  W-L:     %d-%d\n", p.Wins, p.Losses)
-			fmt.Printf("  ERA:     %.2f\n", p.ERA)
-			fmt.Printf("  WHIP:    %.2f\n", p.WHIP)
+			fmt.Printf("  ERA:     %s\n", p.ERA)
+			fmt.Printf("  WHIP:    %s\n", p.WHIP)
 			fmt.Printf("  K:       %d\n", p.Strikeouts)
-			fmt.Printf("  K/9:     %.1f\n", p.SOP9)
+			fmt.Printf("  BB:      %d\n", p.Walks)
+			fmt.Printf("  H:       %d\n", p.Hits)
+			fmt.Printf("  R:       %d\n", p.Runs)
+			fmt.Printf("  HR:      %d\n", p.HomeRuns)
+			fmt.Printf("  SV:      %d\n", p.Saves)
+			fmt.Printf("  K/9:     %s\n", p.SOP9)
 			return
 		}
 	}

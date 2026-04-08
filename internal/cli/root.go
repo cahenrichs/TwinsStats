@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cahenrichs/TwinsStats/internal/db"
+	"github.com/cahenrichs/mlbstats/internal/db"
 	"github.com/spf13/cobra"
 )
 
